@@ -1,4 +1,4 @@
-run: 
+run:
 		kubectl apply -f ./back/back-deployment.yaml
 		kubectl apply -f ./back/back-service.yaml
 		kubectl apply -f ./data/data-deployment.yaml
@@ -9,9 +9,9 @@ run:
 		kubectl apply -f ./front/front-service.yaml
 
 fill-db:
-		kubectl apply -f ./data-script/data-script-deployment.yaml
+		kubectl apply -f ./data-script/data-script-deployment.yaml	
 
-stop: 
+stop:
 		kubectl delete -f ./back/back-deployment.yaml
 		kubectl delete -f ./back/back-service.yaml
 		kubectl delete -f ./data/data-deployment.yaml
@@ -21,5 +21,3 @@ stop:
 
 clean: 
 	kubectl delete -f ./data/pvc.yaml
-
-	

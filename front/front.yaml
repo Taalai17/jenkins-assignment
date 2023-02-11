@@ -24,4 +24,4 @@ spec:
           valueFrom:
             name: secret_task_7
             key: SQLALCHEMY_DATABASE_URI
-            optional: false
+            optional: false 

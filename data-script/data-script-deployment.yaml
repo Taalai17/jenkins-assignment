@@ -1,0 +1,60 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.version: 1.20.0 (f3d54d784)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: data-script
+  name: data-script
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: data-script 
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.version: 1.20.0 (f3d54d784)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/myapp: "true"
+        io.kompose.service: data-script
+    spec:
+      containers:
+      - image: nick8989/data-script:v2.1
+        imagePullPolicy: Always
+        name: data-script
+        envFrom:
+         - secretRef:
+            name: secret-task 
+        resources: {}
+      initContainers:
+      - name: data-script-init
+        image: mysql
+        command: ['sh', '-c', "until mysql -h ${MYSQL_DB_HOST} -u ${MYSQL_USER} -p${MYSQL_USER_PASSWORD} -e 'show databases;'; do echo waiting for mydb; sleep 2; done"] 
+        env:
+        - name: MYSQL_DB_HOST 
+          valueFrom:
+            secretKeyRef:
+              name: secret-task
+              key: MYSQL_DB_HOST
+              optional: false
+        - name: MYSQL_USER
+          valueFrom:
+           secretKeyRef:
+              name: secret-task 
+              key: MYSQL_USER
+              optional: false 
+        - name: MYSQL_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-task
+              key: MYSQL_USER_PASSWORD
+              optional: false
+        resources: {}
+      restartPolicy: Always
+status: {}
