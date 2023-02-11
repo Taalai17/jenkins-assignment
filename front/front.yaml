@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-deployment
+  labels:
+    app: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+      - name: front
+        image: nick8989/front:v1
+        ports:
+        - containerPort: 3000
+        env:
+        - name: SQLALCHEMY_DATABASE_URI
+          valueFrom:
+            name: secret_task_7
+            key: SQLALCHEMY_DATABASE_URI
+            optional: false
